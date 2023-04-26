@@ -1,0 +1,55 @@
+import pygame
+import random
+from tkinter import messagebox
+pygame.init()
+screen = pygame.display.set_mode((1380,720))
+pygame.display.set_caption('Game')
+clock = pygame.time.Clock()
+space_surf = pygame.image.load('Pygame/graphics/space.jpg')
+jet_surf = pygame.image.load('Pygame/graphics/jet.png')
+jet_rect = jet_surf.get_rect(midbottom = (400,350))
+bomb_surf = pygame.image.load('Pygame/graphics/bomb.png')
+bomb_rect = bomb_surf.get_rect(midbottom = (100,50))
+bomb_surf_1 = pygame.image.load('Pygame/graphics/bomb.png')
+bomb_rect_1 = bomb_surf.get_rect(midbottom = (690,50))
+bomb_surf_2 = pygame.image.load('Pygame/graphics/bomb.png')
+bomb_rect_2 = bomb_surf.get_rect(midbottom = (1280,50))
+score = 1
+score_1 = 2
+score_2 = 3
+test_font = pygame.font.Font('Pygame/Font/Pixeltype.ttf', 50)
+run = True
+while run:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+        if event.type == pygame.MOUSEMOTION:
+            jet_rect.center = pygame.mouse.get_pos()
+    bomb_rect.y += score
+    bomb_rect_1.y += score_1
+    bomb_rect_2.y += score_2
+    text_surface = test_font.render(f'Score: {score}', False , 'Black')
+    mouse_pos = pygame.mouse.get_pos()
+    screen.blit(space_surf, (0,0))
+    screen.blit(bomb_surf, bomb_rect)
+    screen.blit(bomb_surf_1, bomb_rect_1)
+    screen.blit(bomb_surf_2, bomb_rect_2)
+    screen.blit(jet_surf, jet_rect)
+    if bomb_rect.colliderect(jet_rect) or bomb_rect_1.colliderect(jet_rect) or bomb_rect_2.colliderect(jet_rect):
+        run = False
+        messagebox.showinfo("YOUR SCORE",score)
+    if bomb_rect.y > 600:
+        bomb_rect.y = 0
+        score += 1
+        score_1 += 1
+        score_2 += 1
+        bomb_rect.x = random.randint(0,1380)
+    if bomb_rect_1.y > 600:
+        bomb_rect_1.y = 0
+        bomb_rect_1.x = random.randint(0,1380)
+    if bomb_rect_2.y > 600:
+        bomb_rect_2.y = 0
+        bomb_rect_2.x = random.randint(0,1380)
+    screen.blit(text_surface, (1200,50))
+    pygame.display.update()
+    clock.tick(60)
